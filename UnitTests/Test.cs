@@ -82,8 +82,8 @@ namespace UnitTests
 			"this is\"not\\allowed@example.com",
 			"this\\ still\\\"not\\\\allowed@example.com",
 
-			// example of real (invalid) input from real users. This
-			// specifically used to cause an IndexOutOfRangeException.
+			// examples of real (invalid) input from real users.
+			"No longer available.",
 			"Moved."
 		};
 

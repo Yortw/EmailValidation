@@ -3,3 +3,5 @@ EmailValidation.suo
 bin
 obj
 *~
+/packages/NUnit.2.6.4
+*.suo

@@ -260,13 +260,19 @@ namespace EmailValidation
 			if (email.Length == 0)
 				return false;
 
-			if (index >= email.Length || !SkipWord (email, ref index, allowInternational))
+			if (!SkipWord (email, ref index, allowInternational) || index >= email.Length)
 				return false;
 
-			while (index < email.Length && email[index] == '.') {
+			while (email[index] == '.') {
 				index++;
 
-				if (index >= email.Length || !SkipWord (email, ref index, allowInternational))
+				if (index >= email.Length)
+					return false;
+
+				if (!SkipWord (email, ref index, allowInternational))
+					return false;
+
+				if (index >= email.Length)
 					return false;
 			}
 
