@@ -64,6 +64,8 @@ namespace EmailValidation
 
 		static bool SkipSubDomain (string text, ref int index, bool allowInternational)
 		{
+			int startIndex = index;
+
 			if (!IsDomain (text[index], allowInternational) || text[index] == '-')
 				return false;
 
@@ -72,7 +74,7 @@ namespace EmailValidation
 			while (index < text.Length && IsDomain (text[index], allowInternational))
 				index++;
 
-			return true;
+			return (index - startIndex) < 64 && text[index - 1] != '-';
 		}
 
 		static bool SkipDomain (string text, ref int index, bool allowInternational)
@@ -198,7 +200,7 @@ namespace EmailValidation
 					if (!SkipIPv4Literal (text, ref index))
 						return false;
 
-					break;
+					return compact ? colons < 6 : colons == 6;
 				}
 
 				int count = index - startIndex;
@@ -230,10 +232,7 @@ namespace EmailValidation
 			if (colons < 2)
 				return false;
 
-			if (compact)
-				return colons < 6;
-
-			return colons < 7;
+			return compact ? colons < 7 : colons == 7;
 		}
 
 		/// <summary>
@@ -257,7 +256,7 @@ namespace EmailValidation
 			if (email == null)
 				throw new ArgumentNullException ("email");
 
-			if (email.Length == 0)
+			if (email.Length == 0 || email.Length >= 255)
 				return false;
 
 			if (!SkipWord (email, ref index, allowInternational) || index >= email.Length)
@@ -276,7 +275,7 @@ namespace EmailValidation
 					return false;
 			}
 
-			if (index + 1 >= email.Length || email[index++] != '@')
+			if (index + 1 >= email.Length || index > 64 || email[index++] != '@')
 				return false;
 
 			if (email[index] != '[') {
